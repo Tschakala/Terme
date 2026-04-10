@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Globalization;
+using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace _2d_admination
 {
@@ -11,7 +13,7 @@ namespace _2d_admination
             double originX = width / 2.0;
             double originY = height / 2.0;
 
-            for (int k = 1; k < 1000; k++)
+            for (int k = 1; k < 200; k++)
             {
                 Console.WriteLine(k);
                 for (int i = 0; i < width; i++)
@@ -50,18 +52,62 @@ namespace _2d_admination
                 }
 
                 Task.Delay(0);
-                Console.Clear();
+                Console.SetCursorPosition(0, 0);
             }
+            Console.Clear();
         }
+
+        static string ReplaceTrig(string expr, double xValue)
+        {
+            string xStr = xValue.ToString(CultureInfo.InvariantCulture);
+
+            expr = Regex.Replace(expr, @"(?i)(math\.)?sin\s*\((.*?)\)", match =>
+            {
+                string inner = match.Groups[2].Value.Replace("x", xStr);
+                double v = Convert.ToDouble(new DataTable().Compute(inner, ""));
+                return Math.Sin(v).ToString(CultureInfo.InvariantCulture);
+            });
+
+            expr = Regex.Replace(expr, @"(?i)(math\.)?cos\s*\((.*?)\)", match =>
+            {
+                string inner = match.Groups[2].Value.Replace("x", xStr);
+                double v = Convert.ToDouble(new DataTable().Compute(inner, ""));
+                return Math.Cos(v).ToString(CultureInfo.InvariantCulture);
+            });
+
+            expr = Regex.Replace(expr, @"(?i)(math\.)?tan\s*\((.*?)\)", match =>
+            {
+                string inner = match.Groups[2].Value.Replace("x", xStr);
+                double v = Convert.ToDouble(new DataTable().Compute(inner, ""));
+                return Math.Tan(v).ToString(CultureInfo.InvariantCulture);
+            });
+
+            return expr;
+        }
+
+
+
+        static string ExpandPowers(string expression)
+        {
+            return Regex.Replace(expression, @"x\^(\d+)", match =>
+            {
+                int power = int.Parse(match.Groups[1].Value);
+                return string.Join("*", Enumerable.Repeat("x", power));
+            });
+        }
+
+
+
 
         static bool calculate(string formula, double x, double y)
         {
             string right = formula.Split('=')[1].Trim();
 
-            right = right.Replace(
-                "x",
-                x.ToString(CultureInfo.InvariantCulture)
-            );
+            right = ReplaceTrig(right, x);
+
+            right = ExpandPowers(right);
+
+            right = right.Replace("x", x.ToString(CultureInfo.InvariantCulture));
 
             DataTable table = new DataTable();
             double result = Convert.ToDouble(table.Compute(right, ""));
@@ -69,8 +115,13 @@ namespace _2d_admination
             return Math.Abs(result / 10.0 - y) < 0.5;
         }
 
+
+
+
         static void Main(string[] args)
         {
+
+
             while (true)
             {
                 string formula = "";
@@ -80,7 +131,7 @@ namespace _2d_admination
                     Console.Write("Geben Sie eine Formel ein: ");
                     formula = Console.ReadLine();
                 }
-
+                formula = ExpandPowers(formula);
                 int width = 50;
                 int height = 150;
 
@@ -128,11 +179,7 @@ namespace _2d_admination
                 string animate = Console.ReadLine();
                 Console.Clear();
 
-                if (animate.ToLower() == "no")
-                {
-                    break;
-                }
-                else
+                if (animate.ToLower() != "no")
                 {
                     Console.Write("Wie stark soll sich a verändern?: ");
                     double a = double.Parse(Console.ReadLine());
