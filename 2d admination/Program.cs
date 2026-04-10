@@ -8,14 +8,17 @@ namespace _2d_admination
 {
     internal class Program
     {
-        static void animation(int width, int height, string[,] grid, string formula, double a)
+        static void animation(int width, int height, string[,] grid, string formula, double a, int frames)
         {
             double originX = width / 2.0;
             double originY = height / 2.0;
 
-            for (int k = 1; k < 200; k++)
+            for (int k = 1; k <= frames; k++)
             {
-                Console.WriteLine(k);
+                if (frames > 1)
+                {
+                    Console.WriteLine(k);
+                }
                 for (int i = 0; i < width; i++)
                 {
                     for (int j = 0; j < height; j++)
@@ -41,20 +44,34 @@ namespace _2d_admination
                         }
                     }
                 }
-
+                Console.ForegroundColor = ConsoleColor.Red;
                 for (int i = width - 1; i >= 0; i--)
                 {
                     for (int j = 0; j < height; j++)
                     {
-                        Console.Write(grid[i, j]);
+
+                        if (grid[i, j] == "#")
+                        {
+                            Console.Write(grid[i, j]);
+                        }
+                        else if (grid[i, j] != "")
+                        {
+                            Console.Write(grid[i, j]);
+                        }
                     }
                     Console.WriteLine();
                 }
-
-                Task.Delay(0);
-                Console.SetCursorPosition(0, 0);
+                Console.ForegroundColor= ConsoleColor.Cyan;
+                if (frames > 1)
+                {
+                    Console.SetCursorPosition(0, 0);
+                }
             }
-            Console.Clear();
+            if (frames > 1)
+            {
+                Console.Clear();
+            }
+
         }
 
         static string ReplaceTrig(string expr, double xValue)
@@ -128,7 +145,9 @@ namespace _2d_admination
 
                 while (formula == "")
                 {
-                    Console.Write("Geben Sie eine Formel ein: ");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Write("Put in a Function: ");
+                    Console.ForegroundColor = ConsoleColor.Green;
                     formula = Console.ReadLine();
                 }
                 formula = ExpandPowers(formula);
@@ -140,53 +159,30 @@ namespace _2d_admination
                 double originX = width / 2.0;
                 double originY = height / 2.0;
 
-                for (int i = 0; i < width; i++)
-                {
-                    for (int j = 0; j < height; j++)
-                    {
-                        double x = i - originX;
-                        double y = originY - j;
+                animation(width, height, grid, formula, 1, 1);
 
-                        if (((j == 0) || (j == 149)) && (i != 49))
-                        {
-                            grid[i, j] = "|";
-                        }
-                        else if ((i == 0) || (i == 49))
-                        {
-                            grid[i, j] = "_";
-                        }
-                        else if (calculate(formula, y, x))
-                        {
-                            grid[i, j] = "#";
-                        }
-                        else
-                        {
-                            grid[i, j] = " ";
-                        }
-                    }
-                }
-
-                for (int i = width - 1; i >= 0; i--)
-                {
-                    for (int j = 0; j < height; j++)
-                    {
-                        Console.Write(grid[i, j]);
-                    }
-                    Console.WriteLine();
-                }
-
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.Write("Do you want to animate the term?: ");
+                Console.ForegroundColor = ConsoleColor.Green;
                 string animate = Console.ReadLine();
                 Console.Clear();
 
                 if (animate.ToLower() != "no")
                 {
-                    Console.Write("Wie stark soll sich a verändern?: ");
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Write("Wieviele Frames soll die Animation haben?: ");
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    int frames = int.Parse(Console.ReadLine());
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Write("What should be a?: ");
+                    Console.ForegroundColor = ConsoleColor.Green;
                     double a = double.Parse(Console.ReadLine());
-                    animation(width, height, grid, formula, a);
+                    animation(width, height, grid, formula, a, frames);
                 }
-
+                Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.Write("Do you want to go again?: ");
+                Console.ForegroundColor = ConsoleColor.Green;
                 string answer = Console.ReadLine();
                 Console.Clear();
 
