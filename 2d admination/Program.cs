@@ -17,7 +17,7 @@ namespace _2d_admination
             {
                 if (frames > 1)
                 {
-                    Console.WriteLine(k);
+                    Console.WriteLine("Frame: " + k + "\tFormel: " + formula);
                 }
                 for (int i = 0; i < width; i++)
                 {
@@ -102,8 +102,6 @@ namespace _2d_admination
             return expr;
         }
 
-
-
         static string ExpandPowers(string expression)
         {
             return Regex.Replace(expression, @"x\^(\d+)", match =>
@@ -112,9 +110,6 @@ namespace _2d_admination
                 return string.Join("*", Enumerable.Repeat("x", power));
             });
         }
-
-
-
 
         static bool calculate(string formula, double x, double y)
         {
@@ -131,9 +126,6 @@ namespace _2d_admination
 
             return Math.Abs(result / 10.0 - y) < 0.5;
         }
-
-
-
 
         static void Main(string[] args)
         {
