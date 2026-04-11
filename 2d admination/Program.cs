@@ -3,128 +3,131 @@ using System.Data;
 using System.Globalization;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
 
 namespace _2d_admination
 {
     internal class Program
     {
+
+
         static void animation(int width, int height, string[,] grid, string formula, double a, int frames)
         {
             double originX = width / 2.0;
             double originY = height / 2.0;
 
+            var func = MathParser.Parse(formula.Split('=')[1]);
+
             for (int k = 1; k <= frames; k++)
             {
-                if (frames > 1)
-                {
-                    Console.WriteLine("Frame: " + k + "\tFormel: " + formula);
-                }
                 for (int i = 0; i < width; i++)
                 {
                     for (int j = 0; j < height; j++)
                     {
-                        double x = i - originX;
-                        double y = originY - j;
-
-                        if (((j == 0) || (j == 149)) && (i != 49))
-                        {
-                            grid[i, j] = "|";
-                        }
-                        else if ((i == 0) || (i == 49))
-                        {
-                            grid[i, j] = "_";
-                        }
-                        else if (calculate(formula, y * (a * k), x))
-                        {
-                            grid[i, j] = "#";
-                        }
-                        else
-                        {
-                            grid[i, j] = " ";
-                        }
+                        grid[i, j] = " ";
                     }
                 }
-                Console.ForegroundColor = ConsoleColor.Red;
-                for (int i = width - 1; i >= 0; i--)
+
+                if (frames > 1)
+                {
+                    Console.WriteLine("Frame: " + k + "\tFormel: " + formula);
+                }
+
+                if (originY >= 0 && originY < height)
+                {
+                    for (int i = 0; i < width; i++)
+                    {
+                        grid[i, (int)originY] = "-";
+                    }
+                }
+
+                if (originX >= 0 && originX < width)
                 {
                     for (int j = 0; j < height; j++)
                     {
+                        grid[(int)originX, j] = "|";
+                    }
+                }
 
-                        if (grid[i, j] == "#")
-                        {
-                            Console.Write(grid[i, j]);
-                        }
-                        else if (grid[i, j] != "")
-                        {
-                            Console.Write(grid[i, j]);
-                        }
+                double prevX = double.NaN;
+                double prevY = double.NaN;
+
+                for (double x = -originX; x < originX; x += 0.05)
+                {
+                    double y = func(x * (a * k));
+
+                    int px = (int)(originX + x);
+                    int py = (int)(originY - y);
+
+                    if (!double.IsNaN(prevX))
+                    {
+                        int pxPrev = (int)(originX + prevX);
+                        int pyPrev = (int)(originY - prevY);
+
+                        PlotLine(pxPrev, pyPrev, px, py, grid);
+                    }
+
+                    prevX = x;
+                    prevY = y;
+                }
+
+                Console.ForegroundColor = ConsoleColor.Red;
+
+                for (int j = 0; j < height; j++)
+                {
+                    for (int i = 0; i < width; i++)
+                    {
+                        Console.Write(grid[i, j]);
                     }
                     Console.WriteLine();
                 }
-                Console.ForegroundColor= ConsoleColor.Cyan;
+
+                Console.ForegroundColor = ConsoleColor.Cyan;
+
                 if (frames > 1)
                 {
                     Console.SetCursorPosition(0, 0);
                 }
             }
+
             if (frames > 1)
             {
                 Console.Clear();
             }
-
         }
 
-        static string ReplaceTrig(string expr, double xValue)
+        static void PlotLine(int x0, int y0, int x1, int y1, string[,] grid)
         {
-            string xStr = xValue.ToString(CultureInfo.InvariantCulture);
+            int dx = Math.Abs(x1 - x0);
+            int sx = x0 < x1 ? 1 : -1;
+            int dy = -Math.Abs(y1 - y0);
+            int sy = y0 < y1 ? 1 : -1;
+            int err = dx + dy;
 
-            expr = Regex.Replace(expr, @"(?i)(math\.)?sin\s*\((.*?)\)", match =>
+            while (true)
             {
-                string inner = match.Groups[2].Value.Replace("x", xStr);
-                double v = Convert.ToDouble(new DataTable().Compute(inner, ""));
-                return Math.Sin(v).ToString(CultureInfo.InvariantCulture);
-            });
+                if (x0 >= 0 && x0 < grid.GetLength(0) &&
+                    y0 >= 0 && y0 < grid.GetLength(1))
+                {
+                    grid[x0, y0] = "#";
+                }
 
-            expr = Regex.Replace(expr, @"(?i)(math\.)?cos\s*\((.*?)\)", match =>
-            {
-                string inner = match.Groups[2].Value.Replace("x", xStr);
-                double v = Convert.ToDouble(new DataTable().Compute(inner, ""));
-                return Math.Cos(v).ToString(CultureInfo.InvariantCulture);
-            });
+                if (x0 == x1 && y0 == y1)
+                {
+                    break;
+                }
 
-            expr = Regex.Replace(expr, @"(?i)(math\.)?tan\s*\((.*?)\)", match =>
-            {
-                string inner = match.Groups[2].Value.Replace("x", xStr);
-                double v = Convert.ToDouble(new DataTable().Compute(inner, ""));
-                return Math.Tan(v).ToString(CultureInfo.InvariantCulture);
-            });
-
-            return expr;
-        }
-
-        static string ExpandPowers(string expression)
-        {
-            return Regex.Replace(expression, @"x\^(\d+)", match =>
-            {
-                int power = int.Parse(match.Groups[1].Value);
-                return string.Join("*", Enumerable.Repeat("x", power));
-            });
-        }
-
-        static bool calculate(string formula, double x, double y)
-        {
-            string right = formula.Split('=')[1].Trim();
-
-            right = ReplaceTrig(right, x);
-
-            right = ExpandPowers(right);
-
-            right = right.Replace("x", x.ToString(CultureInfo.InvariantCulture));
-
-            DataTable table = new DataTable();
-            double result = Convert.ToDouble(table.Compute(right, ""));
-
-            return Math.Abs(result / 10.0 - y) < 0.5;
+                int e2 = 2 * err;
+                if (e2 >= dy) 
+                {
+                    err += dy; 
+                    x0 += sx;
+                }
+                if (e2 <= dx) 
+                {
+                    err += dx; y0 += sy;
+                }
+            }
         }
 
         static void Main(string[] args)
@@ -142,9 +145,9 @@ namespace _2d_admination
                     Console.ForegroundColor = ConsoleColor.Green;
                     formula = Console.ReadLine();
                 }
-                formula = ExpandPowers(formula);
-                int width = 50;
-                int height = 150;
+                int width = 150;
+                int height = 50;
+
 
                 string[,] grid = new string[width, height];
 
@@ -154,6 +157,8 @@ namespace _2d_admination
                 animation(width, height, grid, formula, 1, 1);
 
                 Console.ForegroundColor = ConsoleColor.Cyan;
+                Task.Delay(2500).Wait();
+                Console.Clear();
                 Console.Write("Do you want to animate the term?: ");
                 Console.ForegroundColor = ConsoleColor.Green;
                 string animate = Console.ReadLine();
