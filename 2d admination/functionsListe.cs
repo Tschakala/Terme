@@ -18,7 +18,7 @@ namespace _2d_admination
                     int c = 1;
                     foreach (function f in functions)
                     {
-                        result += "\n" + c + ": " + f;
+                        result += "\n" + c + ": " + f + "\n--------------------------------------------------------------------------------";
                         c++;
                     }
                     return result;

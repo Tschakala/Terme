@@ -171,7 +171,7 @@ namespace _2d_admination
             list.AddFunction(f13);
             function f14 = new function("y = ln(x) * a * cos(x)", 0.1, 0, 0, 50);
             list.AddFunction(f14);
-            function f15 = new function("y = 0.05 * a * x^3 + b^c", 0.001, 0.25, 0.05, 35);
+            function f15 = new function("y = 0.05 * a * x^3 + b^c", 0.001, 0.25, 0.05, 35); 
             list.AddFunction(f15);
             function f16 = new function("y = 10 * (sin( (x+a) * 0.1 ) + cos( x+b ) * 0.2 + cos( (x+c) * 7 ) * 0.08)" , 2, 0.2, 1.4, 200);
             list.AddFunction(f16);
@@ -202,6 +202,7 @@ namespace _2d_admination
                     Console.ForegroundColor = ConsoleColor.Green;
                     userinput = Console.ReadLine();
 
+                    Console.Clear();
                     animation(width, height, grid, list.GetFormula(int.Parse(userinput)), list.GetA(int.Parse(userinput)), list.GetB(int.Parse(userinput)), list.GetC(int.Parse(userinput)), list.GetFrames(int.Parse(userinput)));
                 }
                 else
