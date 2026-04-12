@@ -173,7 +173,7 @@ namespace _2d_admination
             list.AddFunction(f14);
             function f15 = new function("y = 0.05 * a * x^3 + b^c", 0.001, 0.25, 0.05, 35);
             list.AddFunction(f15);
-            function f16 = new function("y = 10 * (sin( (x+a) * 0.1 ) + cos( x+b ) * 0.2 + cos( (x+c) * 7 ) * 0.08)" , 2, 0.1, 0.7, 200);
+            function f16 = new function("y = 10 * (sin( (x+a) * 0.1 ) + cos( x+b ) * 0.2 + cos( (x+c) * 7 ) * 0.08)" , 2, 0.2, 1.4, 200);
             list.AddFunction(f16);
 
             Console.ForegroundColor = ConsoleColor.Yellow;
