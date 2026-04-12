@@ -11,11 +11,13 @@ namespace _2d_admination
     {
         static void animation(int width, int height, string[,] grid, string formula, double a, double b, double c, int frames)
         {
+            int delay = 10;
             double originX = width / 2.0;
             double originY = height / 2.0;
 
             var func = MathParser.Parse(formula.Split('=')[1]);
 
+            Console.CursorVisible = false;
             for (int k = 1; k <= frames; k++)
             {
                 double aK = a * k;
@@ -46,6 +48,7 @@ namespace _2d_admination
                     {
                         info += $"   c: {cK:F2}";
                     }
+                    info += $"   Delay between each Frame: {delay}ms";
                     Console.WriteLine(info);
                 }
 
@@ -93,9 +96,11 @@ namespace _2d_admination
 
                 if (frames > 1)
                 {
+                    Thread.Sleep(delay);
                     Console.SetCursorPosition(0, 0);
                 }
             }
+            Console.CursorVisible = true;
             Task.Delay(1500).Wait();
             Console.Clear();
         }
@@ -119,7 +124,7 @@ namespace _2d_admination
                 {
                     break;
                 }
-                    
+
 
                 int e2 = 2 * err;
                 if (e2 >= dy)
@@ -149,7 +154,7 @@ namespace _2d_admination
             list.AddFunction(f2);
             function f3 = new function("y = a * x^2 + (b * c) * sin( b * x )", 0.01, 0.02, 10, 100);
             list.AddFunction(f3);
-            function f4 = new function("y = a * x * cos(b * x) * cos(c * x * 0.3)", 0.01, 0.025, 0.3, 100 );
+            function f4 = new function("y = a * x * cos(b * x) * cos(c * x * 0.3)", 0.01, 0.025, 0.3, 100);
             list.AddFunction(f4);
             function f5 = new function("y = 15 * cos(a * x - b) * sin(0.01 * x + c)", 0.01, 0.02, 0.03, 100);
             list.AddFunction(f5);
@@ -163,7 +168,7 @@ namespace _2d_admination
             list.AddFunction(f9);
             function f10 = new function("y = a * sin(b * x + sin(c * x^2))", 0.1, 0.01, 0.02, 100);
             list.AddFunction(f10);
-            function f11 = new function("y = a * sin( ln(b * x^2 + 10) + c * x )", 0.3 , 0.04, 0.02, 100);
+            function f11 = new function("y = a * sin( ln(b * x^2 + 10) + c * x )", 0.3, 0.04, 0.02, 100);
             list.AddFunction(f11);
             function f12 = new function("y = 0.1 * a * sin(b * x^2) + c * ln(cos(x))", 0.002, 0.003, 0.1, 100);
             list.AddFunction(f12);
@@ -171,9 +176,9 @@ namespace _2d_admination
             list.AddFunction(f13);
             function f14 = new function("y = ln(x) * a * cos(x)", 0.1, 0, 0, 50);
             list.AddFunction(f14);
-            function f15 = new function("y = 0.05 * a * x^3 + b^c", 0.001, 0.25, 0.05, 35); 
+            function f15 = new function("y = 0.05 * a * x^3 + b^c", 0.001, 0.25, 0.05, 35);
             list.AddFunction(f15);
-            function f16 = new function("y = 10 * (sin( (x+a) * 0.1 ) + cos( x+b ) * 0.2 + cos( (x+c) * 7 ) * 0.08)" , 2, 0.2, 1.4, 200);
+            function f16 = new function("y = 10 * (sin( (x+a) * 0.1 ) + cos( x+b ) * 0.2 + cos( (x+c) * 7 ) * 0.08)", 2, 0.2, 1.4, 200);
             list.AddFunction(f16);
 
             Console.ForegroundColor = ConsoleColor.Yellow;
