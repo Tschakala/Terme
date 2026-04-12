@@ -11,7 +11,7 @@ namespace _2d_admination
     {
         static void animation(int width, int height, string[,] grid, string formula, double a, double b, double c, int frames)
         {
-            int delay = 10;
+            int delay = 5;
             double originX = width / 2.0;
             double originY = height / 2.0;
 
@@ -156,7 +156,7 @@ namespace _2d_admination
             list.AddFunction(f3);
             function f4 = new function("y = a * x * cos(b * x) * cos(c * x * 0.3)", 0.01, 0.025, 0.3, 100);
             list.AddFunction(f4);
-            function f5 = new function("y = 15 * cos(a * x - b) * sin(0.01 * x + c)", 0.01, 0.02, 0.03, 100);
+            function f5 = new function("y = 15 * cos(a * x - b) * sin(0.01 * x + c)", 0.01, 0.02, 0.03, 200);
             list.AddFunction(f5);
             function f6 = new function("y = ln(25) * sin(x^2) * a * ln(x^2 + 1 + b * sin(c * x))", 0.01, 0.0025, 0.001, 75);
             list.AddFunction(f6);
@@ -180,6 +180,10 @@ namespace _2d_admination
             list.AddFunction(f15);
             function f16 = new function("y = 10 * (sin( (x+a) * 0.1 ) + cos( x+b ) * 0.2 + cos( (x+c) * 7 ) * 0.08)", 2, 0.2, 1.4, 200);
             list.AddFunction(f16);
+            function f17 = new function("y = 20*sin(tan(x^a))", 0.005, 0, 0, 150);
+            list.AddFunction(f17);
+            function f18 = new function("y = 20 * sin(cos(x^(a*b*c)))", 0.01, 0.005, 0.001, 300);
+            list.AddFunction(f18);
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Hallo, in diesem Programm können Sie Mathematische Funktionen rendern und animieren.");
