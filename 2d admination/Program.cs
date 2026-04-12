@@ -149,7 +149,32 @@ namespace _2d_admination
             list.AddFunction(f2);
             function f3 = new function("y = a * x^2 + (b * c) * sin( b * x )", 0.01, 0.02, 10, 100);
             list.AddFunction(f3);
-
+            function f4 = new function("y = a * x * cos(b * x) * cos(c * x * 0.3)", 0.01, 0.025, 0.3, 100 );
+            list.AddFunction(f4);
+            function f5 = new function("y = 15 * cos(a * x - b) * sin(0.01 * x + c)", 0.01, 0.02, 0.03, 100);
+            list.AddFunction(f5);
+            function f6 = new function("y = ln(25) * sin(x^2) * a * ln(x^2 + 1 + b * sin(c * x))", 0.01, 0.0025, 0.001, 75);
+            list.AddFunction(f6);
+            function f7 = new function("y = a * sin(b * x) + c * cos(x / 2)", 0.09, 0.3, 0.1, 120);
+            list.AddFunction(f7);
+            function f8 = new function("y = 0.25 * (sin(x) + cos(x)) * (a * x^2 + b * x + c)", 0.001, 0.01, 0.01, 100);
+            list.AddFunction(f8);
+            function f9 = new function("y = a * (0.005 * x^3) + b * (0.02 * x^2) + c * sin(0.1 * x)", 0.01, -0.1, 0.0025, 50);
+            list.AddFunction(f9);
+            function f10 = new function("y = a * sin(b * x + sin(c * x^2))", 0.1, 0.01, 0.02, 100);
+            list.AddFunction(f10);
+            function f11 = new function("y = a * sin( ln(b * x^2 + 10) + c * x )", 0.3 , 0.04, 0.02, 100);
+            list.AddFunction(f11);
+            function f12 = new function("y = 0.1 * a * sin(b * x^2) + c * ln(cos(x))", 0.002, 0.003, 0.1, 100);
+            list.AddFunction(f12);
+            function f13 = new function("y = a * cos(b * x) * cos(c * x^2 * 0.01)", 5, 0.2, 0.2, 25);
+            list.AddFunction(f13);
+            function f14 = new function("y = ln(x) * a * cos(x)", 0.1, 0, 0, 50);
+            list.AddFunction(f14);
+            function f15 = new function("y = 0.05 * a * x^3 + b^c", 0.001, 0.25, 0.05, 35);
+            list.AddFunction(f15);
+            function f16 = new function("y = 10 * (sin( (x+a) * 0.1 ) + cos( x+b ) * 0.2 + cos( (x+c) * 7 ) * 0.08)" , 2, 0.1, 0.7, 200);
+            list.AddFunction(f16);
 
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Hallo, in diesem Programm können Sie Mathematische Funktionen rendern und animieren.");
