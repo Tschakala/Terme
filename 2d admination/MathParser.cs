@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 public static class MathParser
 {
-
+    public static bool UseDegrees { get; set; } = false;
 
     public static class RandomWrapper
     {
@@ -147,6 +147,32 @@ public static class MathParser
     private static Expression ParseAtom(ref string expr, ParameterExpression x, ParameterExpression a, ParameterExpression b, ParameterExpression c)
     {
 
+
+        if (expr.StartsWith("pi"))
+        {
+            expr = expr[2..];
+            return Expression.Constant(Math.PI);
+        }
+
+        if (expr.StartsWith("π"))
+        {
+            expr = expr[1..];
+            return Expression.Constant(Math.PI);
+        }
+
+
+        if (expr.StartsWith("tau"))
+        {
+            expr = expr[3..];
+            return Expression.Constant(Math.PI * 2.0);
+        }
+
+        if (expr.StartsWith("e"))
+        {
+            expr = expr[1..];
+            return Expression.Constant(Math.E);
+        }
+
         if (expr.StartsWith("-"))
         {
             expr = expr[1..];
@@ -272,9 +298,10 @@ public static class MathParser
 
         return func switch
         {
-            "sin" => Expression.Call(typeof(Math).GetMethod("Sin")!, inside),
-            "cos" => Expression.Call(typeof(Math).GetMethod("Cos")!, inside),
-            "tan" => Expression.Call(typeof(Math).GetMethod("Tan")!, inside),
+
+            "sin" => Expression.Call(typeof(Math).GetMethod("Sin")!,MathParser.UseDegrees ? Expression.Multiply(inside, Expression.Constant(Math.PI / 180)) : inside),
+            "cos" => Expression.Call(typeof(Math).GetMethod("Cos")!,MathParser.UseDegrees ? Expression.Multiply(inside, Expression.Constant(Math.PI / 180)) : inside),
+            "tan" => Expression.Call(typeof(Math).GetMethod("Tan")!,MathParser.UseDegrees ? Expression.Multiply(inside, Expression.Constant(Math.PI / 180)) : inside),
             "ln" => Expression.Call(typeof(Math).GetMethod("Log", new[] { typeof(double) })!, inside),
             "log10" => Expression.Call(typeof(Math).GetMethod("Log10")!, inside),
             "sqrt" => Expression.Call(typeof(Math).GetMethod("Sqrt")!, inside),
@@ -285,9 +312,9 @@ public static class MathParser
             "sinh" => Expression.Call(typeof(Math).GetMethod("Sinh")!, inside),
             "cosh" => Expression.Call(typeof(Math).GetMethod("Cosh")!, inside),
             "tanh" => Expression.Call(typeof(Math).GetMethod("Tanh")!, inside),
-            "asin" => Expression.Call(typeof(Math).GetMethod("Asin")!, inside),
-            "acos" => Expression.Call(typeof(Math).GetMethod("Acos")!, inside),
-            "atan" => Expression.Call(typeof(Math).GetMethod("Atan")!, inside),
+            "asin" => MathParser.UseDegrees ? Expression.Multiply(Expression.Call(typeof(Math).GetMethod("Asin")!, inside),Expression.Constant(180.0 / Math.PI)) : Expression.Call(typeof(Math).GetMethod("Asin")!, inside),
+            "acos" => MathParser.UseDegrees ? Expression.Multiply(Expression.Call(typeof(Math).GetMethod("Acos")!, inside),Expression.Constant(180.0 / Math.PI)) : Expression.Call(typeof(Math).GetMethod("Acos")!, inside),
+            "atan" => MathParser.UseDegrees ? Expression.Multiply(Expression.Call(typeof(Math).GetMethod("Atan")!, inside),Expression.Constant(180.0 / Math.PI)) : Expression.Call(typeof(Math).GetMethod("Atan")!, inside),
             "floor" => Expression.Call(typeof(Math).GetMethod("Floor", new[] { typeof(double) })!,inside),
             "ceil" => Expression.Call(typeof(Math).GetMethod("Ceiling", new[] { typeof(double) })!,inside),
             _ => throw new Exception("Unbekannte Funktion: " + func)

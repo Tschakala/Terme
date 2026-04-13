@@ -18,6 +18,10 @@ namespace _2d_admination
             Console.WriteLine("\t y = <Funktion> ");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\n <---> Unterstützte Funktionen <---> ");
+            Console.Write("-> Pi und Eulersche Zahl: ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("pi, e");
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.Write("-> Variablen: ");
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("a, b, c");
@@ -187,21 +191,22 @@ namespace _2d_admination
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("1. Wollen Sie in die FunktionenBibliothek schauen?");
                     Console.WriteLine("2. Wollen Sie selber eine Funktion eingeben?");
-                    Console.WriteLine("3. Wollen Sie die Regeln des Programmes Lesen?");
+                    Console.WriteLine("3. Wollen Sie die Taschenrechnerfunktion nutzen?");
+                    Console.WriteLine("4. Wollen Sie die Regeln des Programmes Lesen?");
                     Console.Write("Eingabe: ");
                     Console.ForegroundColor = ConsoleColor.Green;
                     string raw = Console.ReadLine();
 
                     if (int.TryParse(raw, out input))
                     {
-                        if (input == 1 || input == 2 || input == 3)
+                        if (input == 1 || input == 2 || input == 3 || input == 4)
                         {
                             valid = true;
                         }
                         else
                         {
                             Console.ForegroundColor = ConsoleColor.Red;
-                            Console.WriteLine("Bitte nur 1, 2 oder 3 eingeben!");
+                            Console.WriteLine("Bitte nur 1, 2, 3 oder 4 eingeben!");
                         }
                     }
                     else
@@ -259,10 +264,15 @@ namespace _2d_admination
                 }
                 else if (input == 3)
                 {
+                    Console.Clear();
+                    Calculator calculator = new Calculator();
+                }
+                else if (input == 4)
+                {
                     PrintRules();
                 }
 
-                if (input != 3)
+                if (input != 4)
                 {
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.Write("Wollen Sie nocheinmal das Programm ausführen?[y/n]: ");
